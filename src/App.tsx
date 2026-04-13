@@ -3,11 +3,35 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Instagram, MapPin, Clock, Calendar, ExternalLink, Menu as MenuIcon, X } from 'lucide-react';
 import barImage from './assets/Bar.webp';
 import stayImage from './assets/Stay.webp';
-import mapImage from './assets/map.webp';
-import takoyakiSourceImage from './assets/input_file_0.png.webp';
-import takoyakiSaltImage from './assets/input_file_1.png.webp';
+import mapImage from './assets/map-1.webp';
+import takoyakiSourceImage from './assets/input_file_0,png-1.webp';
+import takoyakiSaltImage from './assets/input_file_1,png-1.webp';
 
 type View = 'home' | 'bar' | 'stay' | 'access';
+
+// Image component with loading state and safety
+const SafeImage = ({ src, alt, className, imgClassName }: { src: string; alt: string; className?: string; imgClassName?: string }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  return (
+    <div className={`relative overflow-hidden bg-[#222] ${className}`}>
+      <motion.img
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isLoaded ? 1 : 0 }}
+        transition={{ duration: 0.8 }}
+        onLoad={() => setIsLoaded(true)}
+        src={src}
+        alt={alt}
+        className={`w-full h-full object-cover ${imgClassName}`}
+        referrerPolicy="no-referrer"
+      />
+      {!isLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-6 h-6 border-2 border-white/10 border-t-white/30 rounded-full animate-spin"></div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default function App() {
   const [currentView, setCurrentView] = useState<View>('home');
@@ -113,11 +137,10 @@ export default function App() {
             >
               <section className="relative h-[100vh] flex flex-col justify-center items-center px-5 text-center overflow-hidden">
                 <div className="absolute inset-0 z-0">
-                  <img 
+                  <SafeImage 
                     src="https://images.unsplash.com/photo-1471922694854-ff1b63b20054?auto=format&fit=crop&w=1920&q=80" 
                     alt="Sunset Sea" 
-                    className="w-full h-full object-cover opacity-60 brightness-75"
-                    referrerPolicy="no-referrer"
+                    className="w-full h-full opacity-60 brightness-75"
                   />
                   <div className="absolute inset-0 bg-black/30"></div>
                 </div>
@@ -154,26 +177,24 @@ export default function App() {
               <section className="py-40 px-5 max-w-6xl mx-auto">
                 <div className="grid md:grid-cols-2 gap-12 md:gap-24">
                     <div className="group cursor-pointer" onClick={() => showView('bar')}>
-                      <div className="aspect-[4/5] overflow-hidden mb-8 rounded-sm">
-                        <img 
-                          src={barImage} 
-                          alt="Takoyaki Bar" 
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1.5s] grayscale opacity-80 hover:grayscale-0 hover:opacity-100"
-                        />
-                      </div>
+                      <SafeImage 
+                        src={barImage} 
+                        alt="Takoyaki Bar" 
+                        className="aspect-[4/5] mb-8 rounded-sm overflow-hidden"
+                        imgClassName="group-hover:scale-110 transition-transform duration-[2s] grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100"
+                      />
                     <span className="section-label !text-left !text-[#888]">1F Floor</span>
                     <h2 className="text-3xl font-light tracking-widest mb-8 text-white">Takoyaki Bar</h2>
                     <button className="btn border-white text-white hover:bg-white hover:text-black">View Menu</button>
                   </div>
                   
                     <div className="group cursor-pointer" onClick={() => showView('stay')}>
-                      <div className="aspect-[4/5] overflow-hidden mb-8 rounded-sm">
-                        <img 
-                          src={stayImage} 
-                          alt="Stay" 
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1.5s] grayscale opacity-80 hover:grayscale-0 hover:opacity-100"
-                        />
-                      </div>
+                      <SafeImage 
+                        src={stayImage} 
+                        alt="Stay" 
+                        className="aspect-[4/5] mb-8 rounded-sm overflow-hidden"
+                        imgClassName="group-hover:scale-110 transition-transform duration-[2s] grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100"
+                      />
                     <span className="section-label !text-left !text-[#888]">2F Floor</span>
                     <h2 className="text-3xl font-light tracking-widest mb-8 text-white">Stay</h2>
                     <button className="btn border-white text-white hover:bg-white hover:text-black">Coming Soon</button>
@@ -199,21 +220,27 @@ export default function App() {
                 <section className="p-0 text-left">
                   <h2 className="text-lg font-medium text-[#c08457] tracking-[0.3em] uppercase border-b border-[#333] pb-5 mb-12">たこ焼きメニュー</h2>
                   <div className="grid md:grid-cols-2 gap-8 md:gap-15 mb-15">
-                    <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-                      <div className="w-[120px] h-[120px] shrink-0 aspect-square overflow-hidden bg-[#222] rounded-sm shadow-sm">
-                        <img src={takoyakiSourceImage} alt="ソースたこ焼き" className="w-full h-full object-cover opacity-80" />
-                      </div>
+                    <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 group">
+                      <SafeImage 
+                        src={takoyakiSourceImage} 
+                        alt="ソースたこ焼き" 
+                        className="w-[120px] h-[120px] shrink-0 rounded-sm shadow-sm overflow-hidden" 
+                        imgClassName="group-hover:scale-110 transition-transform duration-700"
+                      />
                       <div className="flex-1 w-full border-b border-[#333] pb-2 flex justify-between items-end text-lg">
-                        <span className="text-white">ソース (5個)</span>
+                        <span className="text-white group-hover:text-[#c08457] transition-colors">ソース (5個)</span>
                         <span className="text-white">¥500</span>
                       </div>
                     </div>
-                    <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-                      <div className="w-[120px] h-[120px] shrink-0 aspect-square overflow-hidden bg-[#222] rounded-sm shadow-sm">
-                        <img src={takoyakiSaltImage} alt="岩塩たこ焼き" className="w-full h-full object-cover opacity-80" />
-                      </div>
+                    <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 group">
+                      <SafeImage 
+                        src={takoyakiSaltImage} 
+                        alt="岩塩たこ焼き" 
+                        className="w-[120px] h-[120px] shrink-0 rounded-sm shadow-sm overflow-hidden" 
+                        imgClassName="group-hover:scale-110 transition-transform duration-700"
+                      />
                       <div className="flex-1 w-full border-b border-[#333] pb-2 flex justify-between items-end text-lg">
-                        <span className="text-white">岩塩 (5個)</span>
+                        <span className="text-white group-hover:text-[#c08457] transition-colors">岩塩 (5個)</span>
                         <span className="text-white">¥500</span>
                       </div>
                     </div>
@@ -425,23 +452,17 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 opacity-40 grayscale">
-                <div className="aspect-square overflow-hidden rounded-sm">
-                  <img 
-                    src="https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=800&q=80" 
-                    alt="Room 1" 
-                    className="w-full h-full object-cover"
-                    referrerPolicy="no-referrer"
-                  />
-                </div>
-                <div className="aspect-square overflow-hidden rounded-sm">
-                  <img 
-                    src="https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=800&q=80" 
-                    alt="Room 2" 
-                    className="w-full h-full object-cover"
-                    referrerPolicy="no-referrer"
-                  />
-                </div>
+              <div className="grid grid-cols-2 gap-4">
+                <SafeImage 
+                  src={stayImage} 
+                  alt="Stay Room" 
+                  className="aspect-square rounded-sm opacity-60 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-700"
+                />
+                <SafeImage 
+                  src="https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=800&q=80" 
+                  alt="Room 2" 
+                  className="aspect-square rounded-sm opacity-60 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-700"
+                />
               </div>
             </motion.div>
           )}
@@ -496,11 +517,12 @@ export default function App() {
 
                 {/* Handmade Map - Second, Smaller, No Labels */}
                 <div className="flex justify-center py-8">
-                  <div className="w-full max-w-3xl aspect-[16/9] bg-[#222] rounded-sm overflow-hidden border border-white/10 group">
-                    <img 
+                  <div className="group w-full max-w-3xl aspect-[16/9] rounded-sm border border-white/10 overflow-hidden">
+                    <SafeImage 
                       src={mapImage} 
                       alt="Map" 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[2s]" 
+                      className="w-full h-full"
+                      imgClassName="group-hover:scale-110 transition-transform duration-[3s]"
                     />
                   </div>
                 </div>
