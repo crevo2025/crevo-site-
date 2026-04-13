@@ -3,11 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Instagram, MapPin, Clock, Calendar, ExternalLink, Menu as MenuIcon, X } from 'lucide-react';
 
-const barImage = "/crevo-site-/bar.webp";
-const stayImage = "/crevo-site-/stay.webp";
-const mapImage = "/crevo-site-/map.webp";
-const takoyakiSourceImage = "/crevo-site-/takoyaki-source.webp";
-const takoyakiSaltImage = "/crevo-site-/takoyaki-salt.webp";
+const barImage = "bar.webp";
+const stayImage = "stay.webp";
+const mapImage = "map.webp";
+const takoyakiSourceImage = "takoyaki-source.webp";
+const takoyakiSaltImage = "takoyaki-salt.webp";
 
 type View = 'home' | 'bar' | 'stay' | 'access';
 
