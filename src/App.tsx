@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Instagram, MapPin, Clock, Calendar, ExternalLink, Menu as MenuIcon, X } from 'lucide-react';
-import barImage from './assets/Bar.webp';
-import stayImage from './assets/Stay.webp';
-import mapImage from './assets/map-1.webp';
-import takoyakiSourceImage from './assets/input_file_0_png-1.webp';
-import takoyakiSaltImage from './assets/input_file_1_png-1.webp';
+
+const barImage = '/assets/Bar.webp';
+const stayImage = '/assets/Stay.webp';
+const mapImage = '/assets/map-1.webp';
+const takoyakiSourceImage = '/assets/input_file_0_png-1.webp';
+const takoyakiSaltImage = '/assets/input_file_1_png-1.webp';
 
 type View = 'home' | 'bar' | 'stay' | 'access';
 
