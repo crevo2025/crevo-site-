@@ -12,9 +12,6 @@ export default defineConfig(({mode}) => {
   return {
     base: './',
     plugins: [react(), tailwindcss()],
-    build: {
-      assetsInlineLimit: 200000, // 200KB - Inline all images as Base64
-    },
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
     },

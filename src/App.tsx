@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Instagram, MapPin, Clock, Calendar, ExternalLink, Menu as MenuIcon, X, AlertTriangle } from 'lucide-react';
 
-import barImage from './assets/bar.webp';
-import stayImage from './assets/stay.webp';
-import mapImage from './assets/map.webp';
-import takoyakiSourceImage from './assets/takosource.webp';
-import takoyakiSaltImage from './assets/takosalt.webp';
+const barImage = 'bar.webp';
+const stayImage = 'stay.webp';
+const mapImage = 'map.webp';
+const takoyakiSourceImage = 'takosource.webp';
+const takoyakiSaltImage = 'takosalt.webp';
 
 // Error Boundary Fallback
 const ErrorFallback = ({ error }: { error: Error }) => (
@@ -63,7 +63,11 @@ const SafeImage = ({ src, alt, className, imgClassName }: { src: string; alt: st
         src={src}
         alt={alt}
         className={`w-full h-full object-cover ${imgClassName}`}
-        loading="lazy"
+        onError={(e) => {
+          console.error("Image failed to load:", src);
+          // Fallback to a placeholder if it fails
+          (e.target as HTMLImageElement).src = `https://picsum.photos/seed/${alt}/800/600`;
+        }}
       />
     </div>
   );
