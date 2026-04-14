@@ -67,20 +67,33 @@ const SafeImage = ({ src, alt, className, imgClassName }: { src: string; alt: st
     } else {
       setHasError(false);
       setIsLoaded(false);
+      // Debug log to see the actual path being requested
+      console.log(`SafeImage attempting to load: ${src}`);
     }
   }, [src, alt]);
 
+  // Helper to ensure path is correctly handled
+  const getResolvedSrc = (path: string) => {
+    if (!path) return '';
+    // If it's already an absolute URL or starts with /, return as is
+    if (path.startsWith('http') || path.startsWith('/')) return path;
+    // Otherwise ensure it starts with /
+    return `/${path}`;
+  };
+
+  const resolvedSrc = getResolvedSrc(src);
+
   return (
     <div className={`relative overflow-hidden bg-[#222] ${className}`}>
-      {!hasError && src ? (
+      {!hasError && resolvedSrc ? (
         <img
           onLoad={() => setIsLoaded(true)}
           onError={(e) => {
-            console.error(`Failed to load image: ${src}`, e);
+            console.error(`Failed to load image: ${resolvedSrc}`, e);
             setHasError(true);
             setIsLoaded(true);
           }}
-          src={src}
+          src={resolvedSrc}
           alt={alt}
           referrerPolicy="no-referrer"
           className={`w-full h-full object-cover transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'} ${imgClassName}`}
@@ -88,7 +101,7 @@ const SafeImage = ({ src, alt, className, imgClassName }: { src: string; alt: st
       ) : (
         <div className="absolute inset-0 flex flex-col items-center justify-center text-[10px] text-[#555] uppercase tracking-widest px-4 text-center gap-2">
           <span className="opacity-50">Image Error</span>
-          <span className="text-[8px] opacity-30 break-all max-w-full notranslate">{src || alt}</span>
+          <span className="text-[8px] opacity-30 break-all max-w-full notranslate">{resolvedSrc || alt}</span>
         </div>
       )}
       {!isLoaded && !hasError && src && (
