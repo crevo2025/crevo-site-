@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Instagram, MapPin, Clock, Calendar, ExternalLink, Menu as MenuIcon, X, AlertTriangle } from 'lucide-react';
 
-const barImage = 'bar.webp';
-const stayImage = 'stay.webp';
-const mapImage = 'map.webp';
-const takoyakiSourceImage = 'takosource.webp';
-const takoyakiSaltImage = 'takosalt.webp';
+import barImage from './assets/bar.webp';
+import stayImage from './assets/stay.webp';
+import mapImage from './assets/map.webp';
+import takoyakiSourceImage from './assets/takosource.webp';
+import takoyakiSaltImage from './assets/takosalt.webp';
 
 // Error Boundary Fallback
 const ErrorFallback = ({ error }: { error: Error }) => (
@@ -55,24 +55,54 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
 
 type View = 'home' | 'bar' | 'stay' | 'access';
 
-// Simple Image component
+// Smart Image component that tries multiple path strategies
 const SafeImage = ({ src, alt, className, imgClassName }: { src: string; alt: string; className?: string; imgClassName?: string }) => {
-  // Construct the correct path based on the environment
-  // import.meta.env.BASE_URL will be '/crevo-site-/' on GitHub Pages
-  const fullSrc = src.startsWith('http') ? src : `${import.meta.env.BASE_URL}${src}`;
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [errorCount, setErrorCount] = useState(0);
+
+  // Try different path strategies if the initial one fails
+  const getSrc = () => {
+    if (!src) return `https://picsum.photos/seed/${alt}/800/600`;
+    if (src.startsWith('data:') || src.startsWith('http')) return src;
+    
+    // Strategy 0: Use the provided src (Vite's resolved path)
+    if (errorCount === 0) return src;
+    
+    // Strategy 1: Try adding the base URL manually if it's missing
+    if (errorCount === 1) {
+      const base = import.meta.env.BASE_URL || '/';
+      const cleanSrc = src.startsWith('/') ? src.slice(1) : src;
+      const cleanBase = base.endsWith('/') ? base : `${base}/`;
+      return `${cleanBase}${cleanSrc}`;
+    }
+    
+    // Strategy 2: Try a relative path from the current location
+    if (errorCount === 2) {
+      const fileName = src.split('/').pop();
+      return `./assets/${fileName}`;
+    }
+
+    // Final Fallback: High-quality placeholder
+    return `https://picsum.photos/seed/${alt}/800/600`;
+  };
 
   return (
     <div className={`relative overflow-hidden bg-[#222] ${className}`}>
       <img
-        src={fullSrc}
+        src={getSrc()}
         alt={alt}
-        className={`w-full h-full object-cover ${imgClassName}`}
-        onError={(e) => {
-          console.error("Image failed to load:", fullSrc);
-          // Fallback to a placeholder if it fails
-          (e.target as HTMLImageElement).src = `https://picsum.photos/seed/${alt}/800/600`;
+        onLoad={() => setIsLoaded(true)}
+        onError={() => {
+          console.warn(`Image failed (attempt ${errorCount}):`, getSrc());
+          setErrorCount(prev => prev + 1);
         }}
+        className={`w-full h-full object-cover transition-opacity duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'} ${imgClassName}`}
       />
+      {!isLoaded && errorCount < 3 && (
+        <div className="absolute inset-0 flex items-center justify-center bg-[#1a1a1a]">
+          <div className="w-5 h-5 border-2 border-white/10 border-t-white/40 rounded-full animate-spin"></div>
+        </div>
+      )}
     </div>
   );
 };
