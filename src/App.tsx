@@ -57,14 +57,18 @@ type View = 'home' | 'bar' | 'stay' | 'access';
 
 // Simple Image component
 const SafeImage = ({ src, alt, className, imgClassName }: { src: string; alt: string; className?: string; imgClassName?: string }) => {
+  // Construct the correct path based on the environment
+  // import.meta.env.BASE_URL will be '/crevo-site-/' on GitHub Pages
+  const fullSrc = src.startsWith('http') ? src : `${import.meta.env.BASE_URL}${src}`;
+
   return (
     <div className={`relative overflow-hidden bg-[#222] ${className}`}>
       <img
-        src={src}
+        src={fullSrc}
         alt={alt}
         className={`w-full h-full object-cover ${imgClassName}`}
         onError={(e) => {
-          console.error("Image failed to load:", src);
+          console.error("Image failed to load:", fullSrc);
           // Fallback to a placeholder if it fails
           (e.target as HTMLImageElement).src = `https://picsum.photos/seed/${alt}/800/600`;
         }}
