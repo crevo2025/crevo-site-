@@ -15,7 +15,7 @@
         errorDiv.style.fontSize = '20px';
         errorDiv.style.textAlign = 'center';
         errorDiv.style.marginTop = '20px';
-        errorDiv.innerHTML = 'Error caught: ' + msg + ' at ' + url + ':' + lineNo;
+        errorDiv.innerHTML = 'Global Error: ' + msg + ' at ' + url + ':' + lineNo;
         document.body.appendChild(errorDiv);
         return false;
       };
@@ -25,7 +25,21 @@
         root.innerHTML = '<div style="color: green; font-size: 24px; text-align: center;">Inline JS is working!</div>';
       }
     </script>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/src/main.tsx" id="main-script"></script>
+    <script type="module" src="/src/test.js"></script>
+    <script>
+      const script = document.getElementById('main-script');
+      script.onload = () => console.log('main.tsx script loaded');
+      script.onerror = () => {
+        const errorDiv = document.createElement('div');
+        errorDiv.style.color = 'purple';
+        errorDiv.style.fontSize = '24px';
+        errorDiv.style.textAlign = 'center';
+        errorDiv.style.marginTop = '20px';
+        errorDiv.innerHTML = 'FAILED TO LOAD /src/main.tsx (Purple)';
+        document.body.appendChild(errorDiv);
+      };
+    </script>
   </body>
 </html>
 
