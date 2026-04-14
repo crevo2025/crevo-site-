@@ -1,51 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Instagram, MapPin, Clock, Calendar, ExternalLink, Menu as MenuIcon, X, AlertTriangle } from 'lucide-react';
-
-// Error Boundary Fallback
-const ErrorFallback = ({ error }: { error: Error }) => (
-  <div className="fixed inset-0 bg-black flex flex-col items-center justify-center p-10 text-center z-[9999]">
-    <AlertTriangle className="w-16 h-16 text-red-500 mb-6" />
-    <h1 className="text-2xl font-bold text-white mb-4">Application Error</h1>
-    <p className="text-gray-400 mb-8 max-w-md">{error.message}</p>
-    <button 
-      onClick={() => window.location.reload()} 
-      className="px-6 py-3 bg-white text-black rounded-sm font-medium"
-    >
-      Reload Page
-    </button>
-  </div>
-);
-
-interface ErrorBoundaryProps {
-  children: React.ReactNode;
-}
-
-interface ErrorBoundaryState {
-  hasError: boolean;
-  error: Error | null;
-}
-
-class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  constructor(props: ErrorBoundaryProps) {
-    super(props);
-    this.state = { hasError: false, error: null };
-  }
-
-  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { hasError: true, error };
-  }
-
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error("ErrorBoundary caught an error", error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError && this.state.error) {
-      return <ErrorFallback error={this.state.error} />;
-    }
-    return this.props.children;
-  }
-}
+import React, { useState, useEffect } from 'react';
+import { Instagram, MapPin, Clock, Calendar, ExternalLink, Menu as MenuIcon, X } from 'lucide-react';
 
 const barImage = '/bar.webp';
 const stayImage = '/stay.webp';
@@ -55,58 +9,24 @@ const takoyakiSaltImage = '/salt.webp';
 
 type View = 'home' | 'bar' | 'stay' | 'access';
 
-// Image component with loading state and safety
+// Simplified Image component
 const SafeImage = ({ src, alt, className, imgClassName }: { src: string; alt: string; className?: string; imgClassName?: string }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
-
-  useEffect(() => {
-    if (!src) {
-      console.warn(`SafeImage: src is missing for ${alt}`);
-      setHasError(true);
-    } else {
-      setHasError(false);
-      setIsLoaded(false);
-      // Debug log to see the actual path being requested
-      console.log(`SafeImage attempting to load: ${src}`);
-    }
-  }, [src, alt]);
-
-  // Helper to ensure path is correctly handled
-  const getResolvedSrc = (path: string) => {
-    if (!path) return '';
-    // If it's already an absolute URL or starts with /, return as is
-    if (path.startsWith('http') || path.startsWith('/')) return path;
-    // Otherwise ensure it starts with /
-    return `/${path}`;
-  };
-
-  const resolvedSrc = getResolvedSrc(src);
 
   return (
     <div className={`relative overflow-hidden bg-[#222] ${className}`}>
-      {!hasError && resolvedSrc ? (
+      {!hasError ? (
         <img
-          onLoad={() => setIsLoaded(true)}
-          onError={(e) => {
-            console.error(`Failed to load image: ${resolvedSrc}`, e);
-            setHasError(true);
-            setIsLoaded(true);
-          }}
-          src={resolvedSrc}
+          onError={() => setHasError(true)}
+          src={src}
           alt={alt}
           referrerPolicy="no-referrer"
-          className={`w-full h-full object-cover transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'} ${imgClassName}`}
+          className={`w-full h-full object-cover ${imgClassName}`}
         />
       ) : (
         <div className="absolute inset-0 flex flex-col items-center justify-center text-[10px] text-[#555] uppercase tracking-widest px-4 text-center gap-2">
           <span className="opacity-50">Image Error</span>
-          <span className="text-[8px] opacity-30 break-all max-w-full notranslate">{resolvedSrc || alt}</span>
-        </div>
-      )}
-      {!isLoaded && !hasError && src && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-6 h-6 border-2 border-white/10 border-t-white/30 rounded-full animate-spin"></div>
+          <span className="text-[8px] opacity-30 break-all max-w-full notranslate">{src}</span>
         </div>
       )}
     </div>
@@ -114,14 +34,6 @@ const SafeImage = ({ src, alt, className, imgClassName }: { src: string; alt: st
 };
 
 export default function App() {
-  return (
-    <ErrorBoundary>
-      <AppContent />
-    </ErrorBoundary>
-  );
-}
-
-function AppContent() {
   const [currentView, setCurrentView] = useState<View>('home');
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
