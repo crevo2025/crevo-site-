@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Instagram, MapPin, Clock, Calendar, ExternalLink, Menu as MenuIcon, X, AlertTriangle } from 'lucide-react';
+import { Instagram, MapPin, Clock, Calendar, ExternalLink, Menu as MenuIcon, X, AlertTriangle, Mail } from 'lucide-react';
 import { format } from 'date-fns';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -385,6 +385,54 @@ function AppContent() {
                     <span className="section-label !text-left">2F Floor</span>
                     <h2 className="text-2xl font-light tracking-widest mb-6 text-[var(--text-primary)]">Stay</h2>
                     <button className="btn">View Details</button>
+                  </div>
+                </div>
+              </section>
+
+              {/* Contact Section */}
+              <section id="contact" className="py-24 px-5 bg-[var(--bg-surface)] border-t border-[var(--border-color)]">
+                <div className="max-w-4xl mx-auto text-center">
+                  <span className="section-label">Contact</span>
+                  <h2 className="text-2xl font-light tracking-widest text-white mb-12">お問い合わせ</h2>
+                  
+                  <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+                    {/* Instagram DM Option */}
+                    <div className="bg-[var(--bg-main)] p-10 border border-[var(--border-color)] rounded-sm flex flex-col items-center group hover:border-white/30 transition-all">
+                      <div className="w-12 h-12 mb-6 flex items-center justify-center rounded-full bg-white/5 group-hover:bg-white/10 transition-all">
+                        <Instagram size={24} className="text-[#c08457]" />
+                      </div>
+                      <h3 className="text-white text-sm tracking-widest mb-4">Instagram DM</h3>
+                      <p className="text-[10px] text-[var(--text-muted)] leading-relaxed mb-8">
+                        お急ぎの方や、カジュアルなご質問は<br />
+                        InstagramのDMにて承っております。
+                      </p>
+                      <a 
+                        href="https://www.instagram.com/takoyakibar.crevo/" 
+                        target="_blank"
+                        className="text-[9px] text-white tracking-[0.3em] uppercase border border-white/20 px-8 py-3 hover:bg-white hover:text-black transition-all"
+                      >
+                        Send Message
+                      </a>
+                    </div>
+
+                    {/* Form Option */}
+                    <div className="bg-[var(--bg-main)] p-10 border border-[var(--border-color)] rounded-sm flex flex-col items-center group hover:border-white/30 transition-all">
+                      <div className="w-12 h-12 mb-6 flex items-center justify-center rounded-full bg-white/5 group-hover:bg-white/10 transition-all">
+                        <Mail size={24} className="text-[#c08457]" />
+                      </div>
+                      <h3 className="text-white text-sm tracking-widest mb-4">Inquiry Form</h3>
+                      <p className="text-[10px] text-[var(--text-muted)] leading-relaxed mb-8">
+                        宿泊の団体予約や貸切のご相談など、<br />
+                        詳細な内容はこちらのフォームから。
+                      </p>
+                      <a 
+                        href="https://docs.google.com/forms/d/e/1FAIpQLSd70W0gTYKgtd_19JjZ6cHAiOj9IWMXqHB4qK9mEoBQwJjlNA/viewform?usp=sf_link" 
+                        target="_blank"
+                        className="text-[9px] text-white tracking-[0.3em] uppercase border border-white/20 px-8 py-3 hover:bg-white hover:text-black transition-all"
+                      >
+                        Open Form
+                      </a>
+                    </div>
                   </div>
                 </div>
               </section>
