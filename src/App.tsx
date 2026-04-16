@@ -2,6 +2,11 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Instagram, MapPin, Clock, Calendar, ExternalLink, Menu as MenuIcon, X, AlertTriangle, Mail } from 'lucide-react';
 import { format } from 'date-fns';
 import { motion, AnimatePresence } from 'framer-motion';
+import { IMAGES } from './assets';
+import { BookingCalendar } from './components/BookingCalendar';
+import { auth, db, handleFirestoreError, OperationType } from './firebase';
+import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut, User } from 'firebase/auth';
+import { doc, setDoc, deleteDoc, getDoc } from 'firebase/firestore';
 
 // Error Boundary Fallback
 const ErrorFallback = ({ error }: { error: Error }) => (
@@ -45,15 +50,9 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
     if (this.state.hasError && this.state.error) {
       return <ErrorFallback error={this.state.error} />;
     }
-    return this.props.children;
+    return this.props.children || <div className="p-10 text-white">Loading content...</div>;
   }
 }
-
-import { IMAGES } from './assets';
-import { BookingCalendar } from './components/BookingCalendar';
-import { auth, db, handleFirestoreError, OperationType } from './firebase';
-import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut, User } from 'firebase/auth';
-import { doc, setDoc, deleteDoc, getDoc } from 'firebase/firestore';
 
 console.log("App.tsx module loading...");
 
