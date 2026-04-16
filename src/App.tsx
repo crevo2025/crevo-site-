@@ -288,7 +288,7 @@ function AppContent() {
       <main className="pb-20">
         {currentView === 'home' && (
           <div key="home">
-            <section className="relative h-[70vh] flex flex-col justify-center items-center px-5 text-center overflow-hidden">
+            <section className="relative min-h-[70vh] flex flex-col justify-center items-center px-5 pt-32 pb-20 text-center overflow-hidden">
               <div className="absolute inset-0 z-0">
                 <SafeImage 
                   src={IMAGES.HERO_SUNSET} 
@@ -614,8 +614,22 @@ function AppContent() {
           {currentView === 'stay' && (
             <div
               key="stay"
-              className="pt-40 pb-20 px-5 max-w-5xl mx-auto bg-[var(--bg-main)]"
+              className="relative pt-40 pb-20 px-5 max-w-5xl mx-auto bg-[var(--bg-main)]"
             >
+              {/* Coming Soon Overlay */}
+              <div className="absolute inset-0 z-20 bg-black/60 backdrop-blur-[2px] flex flex-col items-center justify-start pt-60 px-10 text-center">
+                <div className="bg-[#c08457] text-white px-10 py-4 mb-8 tracking-[0.5em] font-bold text-xl md:text-2xl shadow-2xl">
+                  COMING SOON
+                </div>
+                <h2 className="text-white text-lg md:text-xl font-light tracking-widest mb-6 leading-relaxed">
+                  宿泊予約は現在準備中です
+                </h2>
+                <p className="text-white/80 text-sm font-light tracking-widest leading-loose max-w-md">
+                  認可申請中のため、オープン日は未定となっております。<br />
+                  最新情報はInstagramにて随時お知らせいたします。
+                </p>
+              </div>
+
               <div className="text-center mb-16">
                 <span className="section-label">2F Floor</span>
                 <h1 className="text-3xl font-light tracking-[0.2em] text-white">Stay & Reservation</h1>
